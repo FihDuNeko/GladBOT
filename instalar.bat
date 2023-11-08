@@ -1,0 +1,1 @@
+npm install colors --no-fund > nulnpm install discord.js --no-fund > nulnpm install fs --no-fund > nulnpm install math --no-fund > nulnpm install mineflayer --no-fund > nulnpm install moment --no-fund > nul
