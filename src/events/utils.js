@@ -1,3 +1,9 @@
+/*
+
+  ~ GladBOT by NekoLuke ~
+
+*/
+
 const moment = require('moment')
 const math = require('math');
 

@@ -1,8 +1,9 @@
 const mineflayer = require('mineflayer')
-const utils = require('./utils');
+const utils = require('./src/events/utils');
 var colors = require('colors');
 const fs = require('fs');
 const { Client } = require('discord.js')
+const Discord = require('discord.js');
 const client = new Client({ intents: 3276799 });
 const config = require('./config.json');
 
@@ -47,6 +48,7 @@ const bot_creator = ({ username, pass, home, auth }) => {
     })
 
     client.on('ready', () => {
+        console.log(`Logged in as ${client.user.tag}!`);
         channel = client.channels.cache.get(channel)
         return;
     })
@@ -146,7 +148,30 @@ const bot_creator = ({ username, pass, home, auth }) => {
             }
         }
 
-        // Verifica o moneytop
+        // Verifica o money dos bots
+        else if (message.content.startsWith(`!balance`)) {
+            let split = message.content.split(' ')
+            if (split[1] == bot.username || split[1] == 'all') {
+                if (bot.location !== 'home') {
+                    channel.send(`${username} não está na home, aguarde um momento`)
+                    return;
+                }
+                else {
+                    let index = split.length - 2
+                    split = split.splice(2, index)
+                    split = split.join(' ')
+                    bot.chat('/money balance')
+                    bot.once('message', (message) => {
+                        if (message.toString().startsWith('[GladMC] ')) {
+                            const moneyMessage = message.toString().substring(8);
+                            channel.send(` [GladMC] ${username}${moneyMessage}`);
+                        }
+                    });
+                }
+            }
+        }
+
+        // embed de topmoney
         else if (message.content.startsWith(`!topmoney`)) {
             let split = message.content.split(' ');
             if (split.length !== 3) {
@@ -175,12 +200,16 @@ const bot_creator = ({ username, pass, home, auth }) => {
                         collectedMessages += `[GladMC] ${message}\n`;
                     } else {
                         bot.removeListener('message', handleMessage);
-                        channel.send(collectedMessages);
+                        const embed = new Discord.EmbedBuilder()
+                            .setColor('#00FF00')
+                            .setDescription(collectedMessages);
+
+                        channel.send({ embeds: [embed] });
                     }
                 } else if (message.toString().startsWith('[GladMC] ')) {
                     gladmcDetected = true;
                     messagesReceived++;
-                    channel.send(`[GladMC] ${message.toString().substring(8)}`);
+                    collectedMessages += `[GladMC] ${message.toString().substring(8)}\n`;
                 }
             }
             bot.chat(`/money top`);
