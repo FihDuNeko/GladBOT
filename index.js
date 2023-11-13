@@ -75,6 +75,10 @@ const bot_creator = ({ username, pass, home, auth }) => {
             }
         }
 
+        //////
+
+        /////
+
         // Para o BOT
         else if (message.content.startsWith('!stop')) {
             let split = message.content.split(' ')
@@ -148,6 +152,46 @@ const bot_creator = ({ username, pass, home, auth }) => {
             }
         }
 
+        /* faz os bots enviarem o dinheiro
+        else if (message.content.startsWith(`!pay`)) {
+            let split = message.content.split(' ');
+        
+            if (split[1] == bot.username || split[1] == 'all') {
+                if (bot.location !== 'home') {
+                    channel.send(`${username} não está na home, aguarde um momento`);
+                    return;
+                } else {
+                    let index = split.length - 2;
+                    split = split.splice(2, index);
+                    split = split.join(' ');
+                    bot.chat('/money balance');
+        
+                    bot.once('message', (balanceMessage) => {
+                        const balanceRegex = /\$([\d,.]+)/;
+                        const match = balanceMessage.toString().match(balanceRegex);
+        
+                        if (match) {
+                            const balanceString = match[1].replace(',', '');
+                            const balance = parseFloat(balanceString);
+                            if (!isNaN(balance)) {
+                                const payAmount = Math.floor(balance / 2);
+                                setTimeout(() => {
+                                    bot.chat(`/pay NekoLuke ${payAmount}`);
+                                }, 5000);
+                                bot.once('message', (payMessage) => {
+                                    channel.send(` [GladMC] ${username} executou /pay NekoFarm ${payAmount}: ${payMessage}`);
+                                });
+                            } else {
+                                channel.send(`Erro ao obter o saldo. Tente novamente.`);
+                            }
+                        } else {
+                            channel.send(`Erro ao analisar a resposta do comando /money balance.`);
+                        }
+                    });
+                }
+            } 
+        }*/
+
         // Verifica o money dos bots
         else if (message.content.startsWith(`!balance`)) {
             let split = message.content.split(' ')
@@ -171,7 +215,7 @@ const bot_creator = ({ username, pass, home, auth }) => {
             }
         }
 
-        // embed de topmoney
+        // Embed de TopMoney
         else if (message.content.startsWith(`!topmoney`)) {
             let split = message.content.split(' ');
             if (split.length !== 3) {
@@ -196,20 +240,26 @@ const bot_creator = ({ username, pass, home, auth }) => {
             function handleMessage(message) {
                 if (gladmcDetected) {
                     messagesReceived++;
-                    if (messagesReceived <= 11) {
+                    if (messagesReceived > 1 && messagesReceived <= 11) {
                         collectedMessages += `[GladMC] ${message}\n`;
-                    } else {
+                    } else if (messagesReceived === 12) {
                         bot.removeListener('message', handleMessage);
                         const embed = new Discord.EmbedBuilder()
+                            .setTitle('Jogadores com mais dinheiro do GladMC')
                             .setColor('#00FF00')
-                            .setDescription(collectedMessages);
+                            .setDescription(collectedMessages)
+                            .setThumbnail('https://yt3.googleusercontent.com/F-mwc-JCMKxbvO_OnOUY2V8QGK4VsoBiUGV_4DHKBVUWUrqPoJJLBfau-XfxVtNbZx2dAl4r9Q=s900-c-k-c0x00ffffff-no-rj')
+                            .setTimestamp()
+                            .setFooter({ text: 'GladBOT by LukeTheNeko', iconURL: 'https://gladmc.com/uploads/logo_gladiador_gladmc.png' });
 
                         channel.send({ embeds: [embed] });
                     }
                 } else if (message.toString().startsWith('[GladMC] ')) {
                     gladmcDetected = true;
                     messagesReceived++;
-                    collectedMessages += `[GladMC] ${message.toString().substring(8)}\n`;
+                    if (messagesReceived > 1) {
+                        collectedMessages += `[GladMC] ${message.toString().substring(8)}\n`;
+                    }
                 }
             }
             bot.chat(`/money top`);
@@ -347,7 +397,7 @@ const bot_creator = ({ username, pass, home, auth }) => {
                                 clearInterval(interval);
                                 channel.send(`${username} todos os itens do inventário foram descartados com sucesso.`);
                             }
-                        }, 175);
+                        }, 200);
                     } else {
                         channel.send(`${username} não está no chão, aguarde um momento.`);
                     }
@@ -396,6 +446,15 @@ const bot_creator = ({ username, pass, home, auth }) => {
     bot.location = 'unknown'
     bot.isRestarting = false
     bot.disconnected = false
+
+    console.log(`  ___ _         _ ___  ___ _____ 
+ / __| |__ _ __| | _ )/ _ \\_   _|
+| (_ | / _\` / _\` | _ \\ (_) || |  
+ \\___|_\\__,_\\__,_|___/\\___/ |_|  
+`.brightMagenta);
+
+    console.log(`BOT by LukeTheNeko v1.0.3`.brightGreen)
+    console.log(`https://github.com/LukeTheNeko/GladBOT`.brightGreen)
 
     bot.once('login', async () => console.log("Conectando > ".brightMagenta + username))
 
