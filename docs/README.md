@@ -16,11 +16,11 @@ Primeiro você precisa criar um BOT do Discord em <a href="https://discord.com/d
 
 <h4>Passo 1.4: Você precisa gerar um token para seu BOT</h4>
 
-<img width="60%" src="../docs/imgs/bot3.png">
+<img width="60%" src="../docs/imgs/BOT3.png">
 
 <h4>Passo 1.5: Copie seu Token do seu BOT</h4>
 
-<img width="60%" src="../docs/imgs/bot4.png">
+<img width="60%" src="../docs/imgs/BOT4.png">
 
 <h4>Passo 2: Instalação </h4>
 Agora, você precisa criar um grupo privado no discord e chamar seu BOT para o grupo que você criou. Crie uma sala com qualquer nome e copie o ID do chat. Para fazer isso, seu Discord precisa estar em modo de desenvolvedor. Caso não saiba como fazer isso, deixei um <a href="https://www.youtube.com/watch?v=EnobVSQ7gmQ&ab_channel=Hyouka">Tutorial em video</a>
